@@ -38,14 +38,11 @@ public class ExampleController {
 	@PostMapping("heyMister")
 	public Flux<String> hey(@RequestBody Mono<Sir> body) {
 		logger.info("-------11-------");
-//		logger.info(body.toString());
-//		logger.info(body.block().toString());
-		Function<Sir, Mono<String>> fun = sir -> Flux.fromArray(sir.getLastName().split("")).next();
-//		fun.apply((Sir)body.block());
+//		Function<Sir, Mono<String>> fun = sir -> Flux.fromArray(sir.getLastName().split("")).next();
 		logger.info("-------12-------");
 		return Mono.just("Hey mister ")
 				.concatWith(body
-						.flatMap(fun)
+						.flatMap(sir -> Flux.fromArray(sir.getLastName().split("")).next())
 						.map(String::toUpperCase)
 						.take(Duration.ofSeconds(1))
 				).concatWith(Mono.just(". how are you?"));
